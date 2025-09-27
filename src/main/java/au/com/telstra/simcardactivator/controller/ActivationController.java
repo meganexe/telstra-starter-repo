@@ -1,10 +1,13 @@
 package au.com.telstra.simcardactivator.controller;
 
 import au.com.telstra.simcardactivator.model.ActivationRequest;
+import au.com.telstra.simcardactivator.model.QueryActivationResponse;
 import au.com.telstra.simcardactivator.service.ActuatorService;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -20,11 +23,11 @@ public class ActivationController {
 
   @PostMapping("/activate")
   public void activateSim(@RequestBody ActivationRequest request) {
-    if (dsService.sendActivation(request.getIccid())) {
-      System.out.println("Activation successful");
-    } else {
-      System.out.println("Activation failed");
-    }
+    boolean success = dsService.sendActivation(request);
   }
 
+  @GetMapping("/activations")
+  public QueryActivationResponse getActivation(@RequestParam long simCardId) {
+    return dsService.getActivationById(simCardId);
+  }
 }
